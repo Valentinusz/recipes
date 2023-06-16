@@ -25,6 +25,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'corretto'
 
       - name: Build with Gradle
         run: ./gradlew build
@@ -42,6 +43,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'corretto'
 
       - name: Run tests
         run: ./gradlew test

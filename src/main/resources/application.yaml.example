@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  datasource:
+    url: jdbc:sqlite:src/main/resources/database/database.db
+    driver-class-name: org.sqlite.JDBC
+    username: admin
+    password: admin
+  graphql:
+    graphiql:
+      enabled: true

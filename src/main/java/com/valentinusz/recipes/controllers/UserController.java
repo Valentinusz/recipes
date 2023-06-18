@@ -1,10 +1,8 @@
-package com.valentinusz.recipes.controller;
+package com.valentinusz.recipes.controllers;
 
-import com.valentinusz.recipes.model.User;
+import com.valentinusz.recipes.models.User;
 import com.valentinusz.recipes.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

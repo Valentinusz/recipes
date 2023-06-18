@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.1.0"
 	id("io.spring.dependency-management") version "1.1.0"
+	id("org.flywaydb.flyway") version "9.8.1"
 }
 
 group = "com.valentinusz"
@@ -13,6 +14,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.flywaydb:flyway-core:9.19.4") // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-graphql")
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")

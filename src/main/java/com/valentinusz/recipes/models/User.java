@@ -1,39 +1,39 @@
-package com.valentinusz.recipes.model;
+package com.valentinusz.recipes.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @NotNull
+    @Column(unique = true, nullable = false, length = 20)
     @Size(min = 6, max = 20)
     private String userName;
 
-    @NotNull
+    @Column(unique = true, nullable = false, length = 32)
     @Email
     private String email;
 
     private Instant emailVerifiedAt;
 
-    @NotNull
+    @Column(unique = true, nullable = false, length = 20)
     @JsonIgnore
     private String password;
 
-    @NotNull
+    @Column(nullable = false, columnDefinition = "bit")
+    @ColumnDefault("0")
     private Boolean isAdmin;
 
     @CreationTimestamp
@@ -51,27 +51,27 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUserName() {
+    public @NotNull String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    public void setUserName(@NotNull String userName) {
         this.userName = userName;
     }
 
-    public String getEmail() {
+    public @NotNull String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotNull String email) {
         this.email = email;
     }
 
@@ -83,11 +83,11 @@ public class User {
         this.emailVerifiedAt = emailVerifiedAt;
     }
 
-    public String getPassword() {
+    public @NotNull String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotNull String password) {
         this.password = password;
     }
 

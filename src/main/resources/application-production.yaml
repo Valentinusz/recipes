@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: recipes
+  flyway:
+    enabled: true
+    user: &database-username admin
+    password: &database-password admin
+    url: &url jdbc:sqlite:src/main/resources/database/database.db # update database url
+    locations: classpath:database/migrations
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect # update database platform
+    hibernate:
+      ddl-auto: validate # make sure hibernate only validates the schema
+    open-in-view: false
+    show-sql: true
+  datasource:
+    url: *url
+    driver-class-name: org.sqlite.JDBC # replace this with driver of your database choice
+    username: *database-username
+    password: *database-password
+  graphql:
+    graphiql:
+      enabled: false # disable graphiql on production

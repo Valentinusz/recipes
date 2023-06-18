@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    default: "development"
+    # uncomment the following line to switch to production env
+    #active: "production"

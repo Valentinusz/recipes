@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
@@ -41,6 +42,9 @@ public class User {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
+    @OneToMany
+    private Collection<Recipe> recipes;
 
     public User() {}
 
@@ -113,5 +117,13 @@ public class User {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setRecipes(Collection<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    public Collection<Recipe> getRecipes() {
+        return recipes;
     }
 }

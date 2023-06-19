@@ -43,7 +43,7 @@ public class User {
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "author")
     private Collection<Recipe> recipes;
 
     public User() {}

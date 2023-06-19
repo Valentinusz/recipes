@@ -38,7 +38,8 @@ public class Recipe {
     private String instructions;
 
     /** Author of the recipe. */
-    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     private User author;
 
     /** Thumbnail of the recipe. */

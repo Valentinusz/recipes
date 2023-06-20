@@ -17,8 +17,10 @@ dependencies {
 	implementation("org.flywaydb:flyway-core:9.19.4") // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-graphql")
+	compileOnly("org.springframework.boot:spring-boot-starter-security")
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("com.github.javafaker:javafaker:1.0.2")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.xerial:sqlite-jdbc:3.40.1.0")

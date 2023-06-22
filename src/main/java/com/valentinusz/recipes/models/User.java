@@ -57,7 +57,16 @@ public class User {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "author")
+    @JsonIgnore
     private Collection<Recipe> recipes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_to_dietary_restriction",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "restriction_id")
+    )
+    private Collection<DietaryRestriction> dietaryRestrictions;
 
     public User(@NotNull String userName, @NotNull String email, @NotNull String password, @NotNull Boolean isAdmin) {
         this.userName = userName;
@@ -140,5 +149,14 @@ public class User {
 
     public Collection<Recipe> getRecipes() {
         return recipes;
+    }
+
+    public void setDietaryRestrictions(Collection<DietaryRestriction> dietaryRestrictions) {
+        this.dietaryRestrictions = dietaryRestrictions;
+    }
+
+
+    public Collection<DietaryRestriction> getDietaryRestrictions() {
+        return dietaryRestrictions;
     }
 }

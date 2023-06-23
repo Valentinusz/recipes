@@ -4,20 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Objects;
 
 /** Entity representing an ingredient. */
 @Entity
 @Table(name = "ingredients")
-@RequiredArgsConstructor
 public class Ingredient {
     /** Id of the ingredient. */
     @Id
@@ -48,12 +45,6 @@ public class Ingredient {
     @Setter
     private IngredientCategory category;
 
-    /** Recipes the ingredient is used in. */
-    @ManyToMany(mappedBy = "ingredients")
-    @Getter
-    @Setter
-    private Collection<Recipe> recipes;
-
     /** Creation time of the entity. */
     @CreationTimestamp
     @Getter
@@ -76,6 +67,6 @@ public class Ingredient {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, energy, category, recipes, createdAt, updatedAt);
+        return Objects.hash(id, name, energy, category);
     }
 }

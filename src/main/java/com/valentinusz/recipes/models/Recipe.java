@@ -57,7 +57,6 @@ public class Recipe {
     /** Thumbnail of the recipe. */
     @Column
     @Size(min = 3, max = 64)
-    @NotNull
     private String thumbnail;
 
     /** Ingredients of the recipe. */

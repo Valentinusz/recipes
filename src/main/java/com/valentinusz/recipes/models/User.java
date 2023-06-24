@@ -27,7 +27,7 @@ public class User {
 
     /** Username of the user. */
     @Column(unique = true, nullable = false, length = 20)
-    @Size(min = 6, max = 20)
+    @Size(min = 4, max = 20)
     @NotNull
     private String userName;
 
@@ -50,7 +50,7 @@ public class User {
     /** Holds whether the user is an admin or not. */
     @Column(nullable = false, columnDefinition = "bit")
     @ColumnDefault("0")
-    private Boolean isAdmin;
+    private Boolean isAdmin = false;
 
     /** Time at which the model was inserted into the database at. */
     @CreationTimestamp

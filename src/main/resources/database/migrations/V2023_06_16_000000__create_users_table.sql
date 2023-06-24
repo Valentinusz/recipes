@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id INTEGER PRIMARY KEY,
-    user_name VARCHAR(20) CHECK ( LENGTH(user_name) BETWEEN 6 AND 20 ) NOT NULL,
+    user_name VARCHAR(20) CHECK ( LENGTH(user_name) BETWEEN 4 AND 20 ) NOT NULL,
     email VARCHAR(32) CHECK ( email LIKE '_%@_%.__%') UNIQUE NOT NULL,
     email_verified_at TIMESTAMP,
     password VARCHAR(60) NOT NULL,

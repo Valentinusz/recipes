@@ -2,7 +2,7 @@ CREATE TABLE portioned_ingredients (
     id INTEGER PRIMARY KEY,
     recipe_id INTEGER NOT NULL REFERENCES recipes ON DELETE CASCADE,
     ingredient_id INTEGER NOT NULL REFERENCES ingredients ON DELETE CASCADE,
-    serving_size VARCHAR(10) CHECK ( serving_size IN  ('TSP', 'TBSP', 'ML', 'G', 'UNIT', 'SLICE')),
+    serving_size VARCHAR(10) CHECK ( serving_size IN  ('TEASPOON', 'TABLESPOON', 'MILLILITER', 'GRAM', 'UNIT', 'SLICE')),
     amount DECIMAL(8, 2) CHECK ( amount > 0 )
 );
 

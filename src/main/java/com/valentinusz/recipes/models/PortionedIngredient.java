@@ -8,26 +8,16 @@ import lombok.Setter;
 @Table(name = "portioned_ingredients")
 @Getter
 @Setter
-public class PortionedIngredient {
-    /** Id of the entity. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class PortionedIngredient extends Ingredient {
     /** Recipe the ingredient is used in with the given portions. */
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    /** Ingredient portioned. */
-    @ManyToOne
-    @JoinColumn(name = "ingredient_id")
-    private Ingredient ingredient;
-
     /** */
     @Enumerated(value = EnumType.STRING)
     private ServingSize servingSize;
 
-    @Column(precision = 8, scale = 2)
+    @Column(precision = 8)
     private Double amount;
 }

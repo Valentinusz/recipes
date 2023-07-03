@@ -15,6 +15,7 @@ import java.util.Objects;
 /** Entity representing an ingredient. */
 @Entity
 @Table(name = "ingredients")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Ingredient {
     /** Id of the ingredient. */
     @Id

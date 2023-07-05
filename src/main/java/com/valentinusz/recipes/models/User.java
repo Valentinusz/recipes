@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,6 +17,8 @@ import java.util.Collection;
 /** Entity representing a user. */
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class User {
     /** Id of the user. */
     @Id
@@ -23,7 +27,7 @@ public class User {
 
     /** Username of the user. */
     @Column(unique = true, nullable = false, length = 20)
-    @Size(min = 6, max = 20)
+    @Size(min = 4, max = 20)
     @NotNull
     private String userName;
 
@@ -46,7 +50,7 @@ public class User {
     /** Holds whether the user is an admin or not. */
     @Column(nullable = false, columnDefinition = "bit")
     @ColumnDefault("0")
-    private Boolean isAdmin;
+    private Boolean isAdmin = false;
 
     /** Time at which the model was inserted into the database at. */
     @CreationTimestamp
@@ -67,96 +71,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "restriction_id")
     )
     private Collection<DietaryRestriction> dietaryRestrictions;
-
-    public User(@NotNull String userName, @NotNull String email, @NotNull String password, @NotNull Boolean isAdmin) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.isAdmin = isAdmin;
-    }
-
-    public User() {
-
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @NotNull String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@NotNull String userName) {
-        this.userName = userName;
-    }
-
-    public @NotNull String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotNull String email) {
-        this.email = email;
-    }
-
-    public Instant getEmailVerifiedAt() {
-        return emailVerifiedAt;
-    }
-
-    public void setEmailVerifiedAt(Instant emailVerifiedAt) {
-        this.emailVerifiedAt = emailVerifiedAt;
-    }
-
-    public @NotNull String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotNull String password) {
-        this.password = password;
-    }
-
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setRecipes(Collection<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
-    public Collection<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setDietaryRestrictions(Collection<DietaryRestriction> dietaryRestrictions) {
-        this.dietaryRestrictions = dietaryRestrictions;
-    }
-
-
-    public Collection<DietaryRestriction> getDietaryRestrictions() {
-        return dietaryRestrictions;
-    }
 }

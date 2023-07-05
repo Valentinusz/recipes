@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /** Entity representing a recipe. */
@@ -18,6 +20,7 @@ import java.util.Collection;
 @Table(name = "recipes")
 @Getter
 @Setter
+@ToString
 public class Recipe {
     /** Id of the recipe. */
     @Id
@@ -61,7 +64,7 @@ public class Recipe {
 
     /** Ingredients of the recipe. */
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.REMOVE)
-    private Collection<PortionedIngredient> ingredients;
+    private Collection<PortionedIngredient> ingredients = new ArrayList<>();
 
     /** Creation time of the entity. */
     @CreationTimestamp

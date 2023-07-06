@@ -1,6 +1,6 @@
 package com.valentinusz.recipes.controllers;
 
-import com.valentinusz.recipes.models.DietaryRestriction;
+import com.valentinusz.recipes.models.IngredientAttribute;
 import com.valentinusz.recipes.models.User;
 import com.valentinusz.recipes.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class UserController {
 
     // TODO add this to a nested controller
     @GetMapping("/users/{id}/restrictions")
-    public ResponseEntity<Collection<DietaryRestriction>> getDietaryRestrictionsOfUser(@PathVariable Long id) {
+    public ResponseEntity<Collection<IngredientAttribute>> getDietaryRestrictionsOfUser(@PathVariable Long id) {
         User user = userRepository.findUserByIdWithDietaryRestrictions(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!")
         );

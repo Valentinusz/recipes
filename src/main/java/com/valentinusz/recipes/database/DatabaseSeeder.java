@@ -32,7 +32,7 @@ public class DatabaseSeeder implements ApplicationRunner {
     private final UserRepository userRepository;
 
     /** Repository for dietary restriction entities. */
-    private final DietaryRestrictionRepository dietaryRestrictionRepository;
+    private final IngredientAttributeRepository ingredientAttributeRepository;
 
     /** Repository for ingredient entities. */
     private final IngredientRepository ingredientRepository;
@@ -54,7 +54,7 @@ public class DatabaseSeeder implements ApplicationRunner {
             @Autowired Faker faker,
             @Autowired UserRepository userRepo,
             @Autowired BCryptPasswordEncoder encoder,
-            @Autowired DietaryRestrictionRepository restrictionRepo,
+            @Autowired IngredientAttributeRepository restrictionRepo,
             @Autowired IngredientRepository ingredientRepo,
             @Autowired PortionedIngredientRepository portionedIngredientRepo,
             @Autowired RecipeRepository recipeRepo
@@ -62,7 +62,7 @@ public class DatabaseSeeder implements ApplicationRunner {
         this.faker = faker;
         this.userRepository = userRepo;
         this.passwordEncoder = encoder;
-        this.dietaryRestrictionRepository = restrictionRepo;
+        this.ingredientAttributeRepository = restrictionRepo;
         this.ingredientRepository = ingredientRepo;
         this.portionedIngredientRepository = portionedIngredientRepo;
         this.recipeRepository = recipeRepo;
@@ -79,9 +79,9 @@ public class DatabaseSeeder implements ApplicationRunner {
     public void seed() {
         IngredientCategory[] ingredientCategories = IngredientCategory.values();
         ServingSize[] servingSizes = ServingSize.values();
-        List<DietaryRestriction> restrictions = dietaryRestrictionRepository.findAll();
+        List<IngredientAttribute> ingredientAttributes = ingredientAttributeRepository.findAll();
 
-        List<User> users = seedUsers(restrictions);
+        List<User> users = seedUsers(ingredientAttributes);
         userRepository.saveAll(users);
 
         List<Ingredient> ingredients = seedIngredients(ingredientCategories);
@@ -92,7 +92,7 @@ public class DatabaseSeeder implements ApplicationRunner {
         seedPortionedIngredients(ingredients, recipes, servingSizes);
     }
 
-    private List<User> seedUsers(List<DietaryRestriction> dietaryRestrictions) {
+    private List<User> seedUsers(List<IngredientAttribute> ingredientAttributes) {
         List<User> users = new LinkedList<>();
         User admin = new User();
         admin.setUserName("admin");
@@ -112,11 +112,11 @@ public class DatabaseSeeder implements ApplicationRunner {
 
             // 50% to have a dietary restriction
             if (faker.bool().bool()) {
-                int start = faker.random().nextInt(dietaryRestrictions.size() - 1);
+                int start = faker.random().nextInt(ingredientAttributes.size() - 1);
                 // approx. 25% to have 2
-                int length = (start != (dietaryRestrictions.size() - 1) && faker.random().nextInt(3) == 0 ? 2 : 1);
+                int length = (start != (ingredientAttributes.size() - 1) && faker.random().nextInt(3) == 0 ? 2 : 1);
 
-                user.setDietaryRestrictions(dietaryRestrictions.subList(start, start + length));
+                user.setDietaryRestrictions(ingredientAttributes.subList(start, start + length));
             }
 
             users.add(user);

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Class responsible for seeding the database with test data.
@@ -32,7 +33,7 @@ public class DatabaseSeeder implements ApplicationRunner {
     private final UserRepository userRepository;
 
     /** Repository for dietary restriction entities. */
-    private final DietaryRestrictionRepository dietaryRestrictionRepository;
+    private final IngredientAttributeRepository ingredientAttributeRepository;
 
     /** Repository for ingredient entities. */
     private final IngredientRepository ingredientRepository;
@@ -46,23 +47,15 @@ public class DatabaseSeeder implements ApplicationRunner {
     /**
      * Constructor.
      *
-     * @param faker           Faker instance.
-     * @param userRepo  UserRepository instance.
-     * @param encoder BCryptPasswordEncoder instance.
+     * @param faker    Faker instance.
+     * @param userRepo UserRepository instance.
+     * @param encoder  BCryptPasswordEncoder instance.
      */
-    public DatabaseSeeder(
-            @Autowired Faker faker,
-            @Autowired UserRepository userRepo,
-            @Autowired BCryptPasswordEncoder encoder,
-            @Autowired DietaryRestrictionRepository restrictionRepo,
-            @Autowired IngredientRepository ingredientRepo,
-            @Autowired PortionedIngredientRepository portionedIngredientRepo,
-            @Autowired RecipeRepository recipeRepo
-    ) {
+    public DatabaseSeeder(@Autowired Faker faker, @Autowired UserRepository userRepo, @Autowired BCryptPasswordEncoder encoder, @Autowired IngredientAttributeRepository restrictionRepo, @Autowired IngredientRepository ingredientRepo, @Autowired PortionedIngredientRepository portionedIngredientRepo, @Autowired RecipeRepository recipeRepo) {
         this.faker = faker;
         this.userRepository = userRepo;
         this.passwordEncoder = encoder;
-        this.dietaryRestrictionRepository = restrictionRepo;
+        this.ingredientAttributeRepository = restrictionRepo;
         this.ingredientRepository = ingredientRepo;
         this.portionedIngredientRepository = portionedIngredientRepo;
         this.recipeRepository = recipeRepo;
@@ -79,20 +72,28 @@ public class DatabaseSeeder implements ApplicationRunner {
     public void seed() {
         IngredientCategory[] ingredientCategories = IngredientCategory.values();
         ServingSize[] servingSizes = ServingSize.values();
-        List<DietaryRestriction> restrictions = dietaryRestrictionRepository.findAll();
+        List<IngredientAttribute> ingredientAttributes = ingredientAttributeRepository.findAll();
 
-        List<User> users = seedUsers(restrictions);
+        List<User> users = seedUsers(ingredientAttributes);
         userRepository.saveAll(users);
 
         List<Ingredient> ingredients = seedIngredients(ingredientCategories);
         ingredientRepository.saveAll(ingredients);
 
         List<Recipe> recipes = seedRecipes(users);
+        recipeRepository.saveAll(recipes);
 
-        seedPortionedIngredients(ingredients, recipes, servingSizes);
+        List<PortionedIngredient> portionedIngredients = seedPortionedIngredients(recipes, ingredients, servingSizes);
+        portionedIngredientRepository.saveAll(portionedIngredients);
     }
 
-    private List<User> seedUsers(List<DietaryRestriction> dietaryRestrictions) {
+    /**
+     * Seeds user entities. Doesn't insert the entities into the database.
+     *
+     * @param ingredientAttributes list of possible ingredient attributes
+     * @return list of users. First index is always the test admin user.
+     */
+    private List<User> seedUsers(List<IngredientAttribute> ingredientAttributes) {
         List<User> users = new LinkedList<>();
         User admin = new User();
         admin.setUserName("admin");
@@ -100,8 +101,6 @@ public class DatabaseSeeder implements ApplicationRunner {
         admin.setEmailVerifiedAt(Instant.now());
         admin.setPassword(passwordEncoder.encode("adminpwd"));
         admin.setIsAdmin(true);
-
-        userRepository.save(admin);
         users.add(admin);
 
         for (int i = 0; i < 10; i++) {
@@ -112,21 +111,27 @@ public class DatabaseSeeder implements ApplicationRunner {
 
             // 50% to have a dietary restriction
             if (faker.bool().bool()) {
-                int start = faker.random().nextInt(dietaryRestrictions.size() - 1);
+                int start = faker.random().nextInt(ingredientAttributes.size() - 1);
                 // approx. 25% to have 2
-                int length = (start != (dietaryRestrictions.size() - 1) && faker.random().nextInt(3) == 0 ? 2 : 1);
+                int length = (start != (ingredientAttributes.size() - 1) && faker.random().nextInt(3) == 0 ? 2 : 1);
 
-                user.setDietaryRestrictions(dietaryRestrictions.subList(start, start + length));
+                user.setDietaryRestrictions(ingredientAttributes.subList(start, start + length));
             }
-
             users.add(user);
         }
 
         return users;
     }
 
+    /**
+     * Seeds ingredients. Doesn't insert the entities into the database.
+     *
+     * @param categories array of possible ingredient catergories.
+     * @return the list of ingredients created.
+     */
     private List<Ingredient> seedIngredients(IngredientCategory[] categories) {
         List<Ingredient> ingredients = new LinkedList<>();
+
         for (int i = 0; i < 30; i++) {
             Ingredient ingredient = new Ingredient();
             ingredient.setName(faker.food().ingredient());
@@ -134,38 +139,66 @@ public class DatabaseSeeder implements ApplicationRunner {
             ingredient.setCategory(categories[faker.random().nextInt(0, categories.length - 1)]);
             ingredients.add(ingredient);
         }
+
         return ingredients;
     }
 
-    private List<PortionedIngredient> seedPortionedIngredients(List<Ingredient> ingredients, List<Recipe> recipes, ServingSize[] servingSizes) {
-        List<PortionedIngredient> portionedIngredients = new LinkedList<>();
-        // create 3-4 portioned version for each ingredient
-        for (Ingredient ingredient: ingredients) {
-            PortionedIngredient portionedIngredient = new PortionedIngredient();
-            portionedIngredient.setRecipe(recipes.get(faker.random().nextInt(0, recipes.size() - 1)));
-            portionedIngredient.setIngredient(ingredient);
-            portionedIngredient.setServingSize(servingSizes[faker.random().nextInt(0, servingSizes.length - 1)]);
-            portionedIngredient.setAmount(faker.number().randomDouble(2, 1, 100));
+    /**
+     * Seeds recipe entities. Doesn't insert the entities into the database.
+     *
+     * @param users a list of users to associate with the recipes.
+     * @return list of the created recipe entities.
+     */
+    private List<Recipe> seedRecipes(List<User> users) {
+        List<Recipe> recipes = new LinkedList<>();
 
-            portionedIngredientRepository.save(portionedIngredient);
-            portionedIngredients.add(portionedIngredient);
+        for (User user : users) {
+            for (int i = 0; i < faker.random().nextInt(0, 4); i++) {
+                Recipe recipe = new Recipe();
+                recipe.setName(faker.food().dish());
+                recipe.setPreparationTime(faker.random().nextInt(0, 30));
+                recipe.setCookingTime(faker.random().nextInt(0, 90));
+                recipe.setInstructions(String.join(" ", faker.lorem().paragraphs(faker.random().nextInt(2, 4))));
+                recipe.setAuthor(user);
+
+                recipes.add(recipe);
+            }
+        }
+
+        return recipes;
+    }
+
+    /**
+     * Seeds the portioned ingredient entity. Doesn't insert the entities into the database.
+     *
+     * @param recipes recipes to create portioned ingredient entities for.
+     * @param ingredients ingredients to portion.
+     * @param servingSizes possible serving sizes a portion can have.
+     * @return a list of newly created entities.
+     */
+    private List<PortionedIngredient> seedPortionedIngredients(List<Recipe> recipes, List<Ingredient> ingredients, ServingSize[] servingSizes) {
+        List<PortionedIngredient> portionedIngredients = new LinkedList<>();
+        for (Recipe recipe : recipes) {
+            var ingredientsToUse = IntStream.generate(() -> faker.random().nextInt(0, ingredients.size() - 1))
+                                            .distinct()
+                                            .limit(faker.random().nextInt(3, 5))
+                                            .mapToObj(index -> {
+                                                Ingredient ingredient = ingredients.get(index);
+                                                PortionedIngredient portionedIngredient = new PortionedIngredient();
+                                                portionedIngredient.setIngredient(ingredient);
+                                                portionedIngredient.setRecipe(recipe);
+                                                portionedIngredient.setServingSize(servingSizes[faker.random()
+                                                                                                     .nextInt(0, servingSizes.length - 1)]);
+                                                portionedIngredient.setAmount(faker.number().randomDouble(2, 1, 100));
+
+                                                return portionedIngredient;
+                                            })
+                                            .toList();
+
+            recipe.setIngredients(ingredientsToUse);
+            portionedIngredients.addAll(ingredientsToUse);
         }
 
         return portionedIngredients;
-    }
-
-    private List<Recipe> seedRecipes(List<User> users) {
-        List<Recipe> recipes = new LinkedList<>();
-        Recipe recipe = new Recipe();
-        recipe.setName(faker.food().dish());
-        recipe.setPreparationTime(faker.random().nextInt(0, 30));
-        recipe.setCookingTime(faker.random().nextInt(0, 90));
-        recipe.setInstructions(String.join(" ", faker.lorem().paragraphs(faker.random().nextInt(2, 4))));
-        recipe.setAuthor(users.get(faker.random().nextInt(0, users.size() - 1)));
-
-        recipeRepository.save(recipe);
-        recipes.add(recipe);
-
-        return recipes;
     }
 }

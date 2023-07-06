@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @Entity
-@Table(name = "dietary_restrictions")
-public class DietaryRestriction {
+@Table(name = "ingredient_attributes")
+public class IngredientAttribute {
     @Id
     private Integer id;
 
@@ -21,9 +21,9 @@ public class DietaryRestriction {
     @JsonIgnore
     private Collection<User> users = new HashSet<>();
 
-    public DietaryRestriction() {}
+    public IngredientAttribute() {}
 
-    public DietaryRestriction(Integer id, String name) {
+    public IngredientAttribute(Integer id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -66,9 +66,9 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_to_dietary_restriction",
+            name = "dietary_restrictions",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "restriction_id")
+            inverseJoinColumns = @JoinColumn(name = "attribute_id")
     )
-    private Collection<DietaryRestriction> dietaryRestrictions;
+    private Collection<IngredientAttribute> dietaryRestrictions;
 }

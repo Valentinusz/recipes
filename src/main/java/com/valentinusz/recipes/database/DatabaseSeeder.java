@@ -87,6 +87,12 @@ public class DatabaseSeeder implements ApplicationRunner {
         portionedIngredientRepository.saveAll(portionedIngredients);
     }
 
+    /**
+     * Seeds user entities. Doesn't insert the entities into the database.
+     *
+     * @param ingredientAttributes list of possible ingredient attributes
+     * @return list of users. First index is always the test admin user.
+     */
     private List<User> seedUsers(List<IngredientAttribute> ingredientAttributes) {
         List<User> users = new LinkedList<>();
         User admin = new User();
@@ -117,6 +123,12 @@ public class DatabaseSeeder implements ApplicationRunner {
         return users;
     }
 
+    /**
+     * Seeds ingredients. Doesn't insert the entities into the database.
+     *
+     * @param categories array of possible ingredient catergories.
+     * @return the list of ingredients created.
+     */
     private List<Ingredient> seedIngredients(IngredientCategory[] categories) {
         List<Ingredient> ingredients = new LinkedList<>();
 
@@ -131,6 +143,12 @@ public class DatabaseSeeder implements ApplicationRunner {
         return ingredients;
     }
 
+    /**
+     * Seeds recipe entities. Doesn't insert the entities into the database.
+     *
+     * @param users a list of users to associate with the recipes.
+     * @return list of the created recipe entities.
+     */
     private List<Recipe> seedRecipes(List<User> users) {
         List<Recipe> recipes = new LinkedList<>();
 
@@ -150,6 +168,14 @@ public class DatabaseSeeder implements ApplicationRunner {
         return recipes;
     }
 
+    /**
+     * Seeds the portioned ingredient entity. Doesn't insert the entities into the database.
+     *
+     * @param recipes recipes to create portioned ingredient entities for.
+     * @param ingredients ingredients to portion.
+     * @param servingSizes possible serving sizes a portion can have.
+     * @return a list of newly created entities.
+     */
     private List<PortionedIngredient> seedPortionedIngredients(List<Recipe> recipes, List<Ingredient> ingredients, ServingSize[] servingSizes) {
         List<PortionedIngredient> portionedIngredients = new LinkedList<>();
         for (Recipe recipe : recipes) {

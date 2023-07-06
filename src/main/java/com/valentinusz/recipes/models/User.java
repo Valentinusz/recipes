@@ -66,6 +66,14 @@ public class User {
 
     @ManyToMany
     @JoinTable(
+            name = "favourites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private Collection<Recipe> favourites;
+
+    @ManyToMany
+    @JoinTable(
             name = "dietary_restrictions",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id")

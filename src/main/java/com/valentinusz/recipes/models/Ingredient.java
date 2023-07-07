@@ -3,71 +3,50 @@ package com.valentinusz.recipes.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
-import java.util.Objects;
 
 /** Entity representing an ingredient. */
 @Entity
 @Table(name = "ingredients")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Ingredient {
     /** Id of the ingredient. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
+    @EqualsAndHashCode.Include
     private Integer id;
 
     /** Name of the ingredient. */
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 64, unique = true)
     @Length(min = 2, max = 64)
     @NotNull
-    @Getter
-    @Setter
     private String name;
 
     /** Energy content of 1 gram of the ingredient. */
     @Column(nullable = false)
     @Min(0)
     @NotNull
-    @Getter
-    @Setter
     private Integer energy;
 
     /** Category of the ingredient. */
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    @Getter
-    @Setter
+    @NotNull
     private IngredientCategory category;
 
     /** Creation time of the entity. */
+    @Column(nullable = false)
     @CreationTimestamp
-    @Getter
     private Instant createdAt;
 
     /** Time at which the entity was last updated at. */
+    @Column(nullable = false)
     @UpdateTimestamp
-    @Getter
     private Instant updatedAt;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, energy, category);
-    }
 }

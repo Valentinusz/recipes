@@ -3,52 +3,24 @@ package com.valentinusz.recipes.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 @Entity
 @Table(name = "ingredient_attributes")
+@Data
+@NoArgsConstructor
 public class IngredientAttribute {
     @Id
     private Integer id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     @Size(min = 3, max = 20)
     private String name;
 
     @ManyToMany(mappedBy = "dietaryRestrictions")
     @JsonIgnore
-    private Collection<User> users = new HashSet<>();
-
-    public IngredientAttribute() {}
-
-    public IngredientAttribute(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
+    private Collection<User> users;
 }

@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,12 +17,13 @@ import java.util.Collection;
 /** Entity representing a user. */
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
+
 public class User {
     /** Id of the user. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     /** Username of the user. */
@@ -42,7 +43,7 @@ public class User {
     private Instant emailVerifiedAt;
 
     /** Password of the user. **/
-    @Column(unique = true, nullable = false, length = 60)
+    @Column(nullable = false, length = 60)
     @JsonIgnore
     @NotNull
     private String password;
@@ -53,6 +54,7 @@ public class User {
     private Boolean isAdmin = false;
 
     /** Time at which the model was inserted into the database at. */
+    @Column(nullable = false)
     @CreationTimestamp
     private Instant createdAt;
 

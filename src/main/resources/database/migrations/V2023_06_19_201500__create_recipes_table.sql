@@ -6,7 +6,7 @@ CREATE TABLE recipes
     cooking_time     INTEGER     NOT NULL CHECK ( cooking_time >= 0 ),
     instructions     TEXT        NOT NULL,
     author_id        INTEGER     NOT NULL,
-    thumbnail        VARCHAR(64) NOT NULL,
+    thumbnail        VARCHAR(64),
     created_at       TIMESTAMP   NOT NULL,
     updated_at       TIMESTAMP,
     

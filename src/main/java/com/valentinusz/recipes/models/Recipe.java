@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
@@ -18,13 +16,14 @@ import java.util.Collection;
 /** Entity representing a recipe. */
 @Entity
 @Table(name = "recipes")
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Recipe {
     /** Id of the recipe. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     /** Name of the recipe. */
@@ -55,6 +54,7 @@ public class Recipe {
     /** Author of the recipe. */
     @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author_id")
+    @NotNull
     private User author;
 
     /** Thumbnail of the recipe. */
@@ -67,6 +67,7 @@ public class Recipe {
     private Collection<PortionedIngredient> ingredients = new ArrayList<>();
 
     /** Creation time of the entity. */
+    @Column(nullable = false)
     @CreationTimestamp
     private Instant createdAt;
 

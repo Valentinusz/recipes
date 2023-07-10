@@ -1,4 +1,4 @@
-package com.valentinusz.recipes.controllers.security;
+package com.valentinusz.recipes.security;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.context.annotation.Bean;

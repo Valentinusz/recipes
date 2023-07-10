@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Query("SELECT u FROM User u JOIN FETCH u.dietaryRestrictions WHERE u.id = :id")
     Optional<User> findUserByIdWithDietaryRestrictions(@Param("id") Long id);
+
+    Optional<User> findUserByUserName(String username);
 }

@@ -1,4 +1,4 @@
-package com.valentinusz.recipes.controllers.security;
+package com.valentinusz.recipes.security;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class RecipeSecurityConfig {
     @Bean
     public SecurityFilterChain recipeSecurityFilterChain(@NotNull HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.securityMatcher("/recipes").authorizeHttpRequests(authorize -> {
-            authorize.requestMatchers(HttpMethod.GET, "/recipes").permitAll();
-        });
+        httpSecurity.securityMatcher("/recipes")
+                    .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.GET, "/recipes")
+                                                                 .permitAll());
         return httpSecurity.build();
     }
 }

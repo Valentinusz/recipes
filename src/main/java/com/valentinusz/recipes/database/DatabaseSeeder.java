@@ -100,7 +100,7 @@ public class DatabaseSeeder implements ApplicationRunner {
         admin.setEmail("admin@recipes.com");
         admin.setEmailVerifiedAt(Instant.now());
         admin.setPassword(passwordEncoder.encode("adminpwd"));
-        admin.setIsAdmin(true);
+        admin.setRole(Role.ADMIN);
         users.add(admin);
 
         for (int i = 0; i < 10; i++) {
@@ -108,6 +108,7 @@ public class DatabaseSeeder implements ApplicationRunner {
             user.setUserName(faker.name().username());
             user.setEmail(faker.internet().emailAddress());
             user.setPassword(passwordEncoder.encode("password"));
+            user.setRole(Role.USER);
 
             // 50% to have a dietary restriction
             if (faker.bool().bool()) {

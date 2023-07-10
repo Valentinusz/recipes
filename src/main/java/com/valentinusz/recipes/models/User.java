@@ -10,16 +10,19 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
 
 /** Entity representing a user. */
 @Entity
 @Table(name = "users")
 @Data
-
-public class User {
+public class User implements UserDetails {
     /** Id of the user. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,10 +51,9 @@ public class User {
     @NotNull
     private String password;
 
-    /** Holds whether the user is an admin or not. */
-    @Column(nullable = false, columnDefinition = "bit")
-    @ColumnDefault("0")
-    private Boolean isAdmin = false;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     /** Time at which the model was inserted into the database at. */
     @Column(nullable = false)
@@ -81,4 +83,34 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "attribute_id")
     )
     private Collection<IngredientAttribute> dietaryRestrictions;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

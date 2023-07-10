@@ -5,7 +5,7 @@ CREATE TABLE users
     email             VARCHAR(32) UNIQUE NOT NULL CHECK ( email LIKE '_%@_%.__%'),
     email_verified_at TIMESTAMP,
     password          VARCHAR(60)        NOT NULL,
-    is_admin          BIT DEFAULT 0      NOT NULL,
+    role              VARCHAR(8)         NOT NULL CHECK ( role IN ('ADMIN', 'STAFF', 'USER', 'GUEST') ),
     created_at        TIMESTAMP          NOT NULL,
     updated_at        TIMESTAMP
 )

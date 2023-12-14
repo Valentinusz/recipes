@@ -5,8 +5,5 @@ A simple recipe browser webapp created as a learning experience to learn Spring 
 - Gradle
 - Spring Boot 3
 - Hibernate 6 (with SQLite database)
-- JUnit 5, Mockito
-- REST (not actually used by frontend) 
-- GraphQL
-- Angular (with Material UI)
-- Git, CI/CD
+- JUnit 5
+- React
